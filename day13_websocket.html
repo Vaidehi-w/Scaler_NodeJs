@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Real-Time Chat</title>
+</head>
+<body>
+  <h1>Welcome to Real-Time Chat!</h1>
+  <div id="messages"></div>
+  <input type="text" id="messageInput" placeholder="Type your message...">
+  <button onclick="sendMessage()">Send</button>
+
+  <script>
+    const socket = new WebSocket('ws://localhost:3000'); // Connect to WebSocket server
+
+    socket.onopen = () => {
+      console.log('Connected to server');
+    };
+
+    socket.onmessage = (event) => {
+      const messageDiv = document.createElement('div');
+      messageDiv.textContent = event.data;
+      document.getElementById('messages').appendChild(messageDiv);
+    };
+
+    function sendMessage() {
+      const messageInput = document.getElementById('messageInput');
+      const message = messageInput.value;
+
+      if (message.trim()) { // Check if message is not empty
+        socket.send(message);
+        messageInput.value = ''; // Clear input field after sending message
+      }
+    }
+  </script>
+</body>
+</html>
